@@ -9,7 +9,7 @@
 *.db
 **/.media/
 **/staticfiles/
-*.env
+#*.env
 #media/
 #data/
 
