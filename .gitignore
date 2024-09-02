@@ -14,7 +14,7 @@
 #data/
 
 data/nginx/logs
-
+data/postgres/dir
 
 
 demoPortfolio/static
