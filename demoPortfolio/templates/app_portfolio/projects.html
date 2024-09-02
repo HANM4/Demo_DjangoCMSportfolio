@@ -1,0 +1,153 @@
+{% extends "template_base.html" %}
+{% load cms_tags sekizai_tags menu_tags %}
+{% load static %}
+
+
+{% block content %}
+<section class="px-[16px] sm:px-[30px] py-[40px] mx-auto max-w-7xl md:px-2">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12">
+    <button class="relative text-sm  group mt-4 sm:mt-0">
+      <div
+          class="rounded-[2px] flex items-center justify-between w-40 h-10 px-3 border-2 border-gray-300 hover:bg-gray-300">
+        {% if tag_selected_slug == "all" %}
+        <span class="font-medium">Все категории</span>
+        {% else %}
+        {% for i in tag_name %}
+        {% if i.slug == tag_selected_slug %}
+        <span class="font-medium">{{ i.name }}</span>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <svg class="w-4 h-4 text-[#C08267]" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div
+          class="absolute z-10 flex-col items-start hidden w-full pb-1 bg-white shadow-lg rounded group-focus-within:flex">
+        {% if tag_selected_slug != "all" %}
+        <a class="w-full px-4 py-2 text-left hover:bg-gray-200" href="{% url 'portfolio:projects' %}">Все
+          категории</a>
+        {% endif %}
+        {% for i in tag_name %}
+        {% if i.slug != tag_selected_slug %}
+        <a class="w-full px-4 py-2 text-left hover:bg-gray-200"
+           href="{{i.get_absolute_url}}">{{i.name}}</a>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </button>
+  </div>
+
+  <div
+      class="grid 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-x-6 gap-y-12 w-full mt-6">
+    {% if tag_selected_slug == "all" %}
+    {% for i in page_obj %}
+
+    <div class="w-full bg-white overflow-hidden group relative">
+      <a href="{{ i.get_absolute_url }}">
+        <img src="{{i.img_background.url}}"
+             class="object-cover w-full h-[400px]" alt=""/>
+        <div
+            class="absolute px-4 pt-2.5 flex flex-col bottom-[0] bg-white w-[100%]">
+          <span
+              class="text-[20px] font-bold inline-block">{{i.name}}</span>
+          <span
+              class="mt-1 border-b-2 border-[#C08267] hidden group-hover:inline-block w-fit cursor-pointer">Подробнее</span>
+        </div>
+      </a>
+    </div>
+
+    {% endfor %}
+    {% else %}
+    {% for i in page_obj %}
+    {% if i.project.publication %}
+    <div class="w-full bg-white overflow-hidden group relative">
+      <a href="{{ i.project.get_absolute_url }}">
+        <img src="{{i.project.img_background.url}}"
+             class="object-cover w-full h-[400px]" alt=""/>
+        <div
+            class="absolute px-4 pt-2.5 flex flex-col bottom-[0] bg-white w-[100%]">
+          <span
+              class="text-[20px] font-bold inline-block">{{ i.project.name }}</span>
+          <span
+              class="mt-1 border-b-2 border-[#C08267] hidden group-hover:inline-block w-fit cursor-pointer">Подробнее</span>
+        </div>
+      </a>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+  </div>
+
+
+  <div class="flex justify-center mt-12 space-x-1">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">
+      <button
+        class="flex items-center justify-center h-8 w-8 hover:border-b-2 border-[#C08267] text-gray-600 hover:text-[#C08267]">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </a>
+    {% else %}
+    <button
+        class="flex items-center justify-center h-8 w-8 rounded text-gray-400">
+      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"/>
+      </svg>
+    </button>
+    {% endif%}
+    {% for i in page_obj.paginator.page_range %}
+    {% if page_obj.number == i %}
+    <button
+        class="flex items-center justify-center h-8 w-8 border-b-2 border-[#C08267] text-sm font-medium text-[#C08267]"
+        disabled>
+      {{ i }}
+    </button>
+    {% else %}
+    <a href="?page={{ i }}">
+      <button
+          class="flex items-center justify-center h-8 w-8 hover:border-b-2 border-[#C08267] text-sm font-medium text-gray-600 hover:text-[#C08267]">
+        {{ i }}
+      </button>
+    </a>
+    {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">
+      <button
+        class="flex items-center justify-center h-8 w-8 hover:border-b-2 border-[#C08267] text-gray-600 hover:text-[#C08267]">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </a>
+    {% else %}
+    <button
+        class="flex items-center justify-center h-8 w-8 rounded text-gray-400">
+      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clip-rule="evenodd"/>
+      </svg>
+    </button>
+    {% endif%}
+  </div>
+
+
+</section>
+{% endblock content %}

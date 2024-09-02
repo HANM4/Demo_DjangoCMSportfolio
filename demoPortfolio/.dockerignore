@@ -1,0 +1,15 @@
+**/__pycache__/
+.venv/
+**/.idea/
+*.sublime-
+*.swp
+*.swo
+*.pyc
+*.sqlite3
+*.db
+**/.media/
+**/staticfiles/
+**/*.env
+media/
+.git
+data/
